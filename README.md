@@ -712,3 +712,5 @@ android:theme="@style/NoActionBarTheme"
 // resize when soft keyboard displays
 android:windowSoftInputMode="adjustResize"
 ```
+
+sp: scalable pixel
