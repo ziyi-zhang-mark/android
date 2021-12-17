@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.7MinutesWorkout">
         <activity
-            android:name=".ExcerciseActivity"
+            android:name=".ExerciseActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
