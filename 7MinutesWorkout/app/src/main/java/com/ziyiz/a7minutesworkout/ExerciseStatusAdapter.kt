@@ -11,8 +11,7 @@ class ExerciseStatusAdapter(val items: ArrayList<ExerciseModel>):
     RecyclerView.Adapter<ExerciseStatusAdapter.ViewHolder>() {
 
     // inner class
-    class ViewHolder(binding: ItemExerciseStatusBinding):
-        RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemExerciseStatusBinding): RecyclerView.ViewHolder(binding.root) {
         val tvItem = binding.tvItem
     }
 
