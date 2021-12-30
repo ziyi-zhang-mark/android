@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.ziyiz.happyplaces"
         minSdk 21
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -48,4 +48,6 @@ dependencies {
 
     // 3rd party lib for rounded image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    debugImplementation 'im.dino:dbinspector:4.0.0@aar'
 }

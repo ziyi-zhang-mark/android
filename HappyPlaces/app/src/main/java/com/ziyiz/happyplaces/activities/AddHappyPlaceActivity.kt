@@ -1,4 +1,4 @@
-package com.ziyiz.happyplaces
+package com.ziyiz.happyplaces.activities
 
 import android.Manifest
 import android.app.Activity
@@ -22,6 +22,9 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.ziyiz.happyplaces.R
+import com.ziyiz.happyplaces.database.DatabaseHandler
+import com.ziyiz.happyplaces.models.HappyPlaceModel
 import kotlinx.android.synthetic.main.activity_add_happy_place.*
 import java.io.File
 import java.io.FileOutputStream
@@ -34,6 +37,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
     private var calendar = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    // iamge URI
+    private var localStorageURI: Uri? = null
+    private var mLatitude: Double = 0.0
+    private var mLongitude: Double = 0.0
 
     companion object {
         private const val GALLERY = 1
@@ -57,8 +64,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateInView()
         }
+        updateDateInView()
         et_date.setOnClickListener(this)
         tv_add_image.setOnClickListener(this)
+        btn_save.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -83,6 +92,40 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 pictureDialog.show()
             }
+            R.id.btn_save -> {
+                when {
+                    et_title.text.isNullOrEmpty() -> {
+                        Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show()
+                    }
+                    et_description.text.isNullOrEmpty() -> {
+                        Toast.makeText(this, "Please enter a description", Toast.LENGTH_SHORT).show()
+                    }
+                    et_location.text.isNullOrEmpty() -> {
+                        Toast.makeText(this, "Please enter a location", Toast.LENGTH_SHORT).show()
+                    }
+                    localStorageURI == null -> {
+                        Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+                    } else -> {
+                        val happyPlaceModel = HappyPlaceModel(
+                            0,
+                            et_title.text.toString(),
+                            localStorageURI.toString(),
+                            et_description.text.toString(),
+                            et_date.text.toString(),
+                            et_location.text.toString(),
+                            mLatitude,
+                            mLongitude
+                        )
+                        val dbHandler = DatabaseHandler(this)
+                        val result = dbHandler.addHappyPlace(happyPlaceModel)
+
+                        if (result > 0) {
+                            Toast.makeText(this, "The place is inserted successfully", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -95,7 +138,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     try {
                         val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
                         // store the image to local
-                        val localStorageURI = saveImageToInternalStorage(selectedImageBitmap)
+                        localStorageURI = saveImageToInternalStorage(selectedImageBitmap)
                         Log.i("ziyiz saved image uri: ", "Path - $localStorageURI")
 
                         iv_place_image.setImageBitmap(selectedImageBitmap)
@@ -109,7 +152,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     val thumbnail: Bitmap = data.extras?.get("data") as Bitmap
 
                     // store the image to local
-                    val localStorageURI = saveImageToInternalStorage(thumbnail )
+                    localStorageURI = saveImageToInternalStorage(thumbnail )
                     Log.i("ziyiz saved image uri: ", "Path - $localStorageURI")
 
                     iv_place_image.setImageBitmap(thumbnail)
