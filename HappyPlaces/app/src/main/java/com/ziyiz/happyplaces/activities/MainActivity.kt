@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val ADD_PLACE_ACTIVITY_REQUEST_CODE = 1
+        const val EXTRA_PLACE_DETAILS = "extra_place_details"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,17 @@ class MainActivity : AppCompatActivity() {
     private fun setupHappyPlacesRecyclerView(placeList: ArrayList<HappyPlaceModel>) {
         rv_happy_place_list.layoutManager = LinearLayoutManager(this)
         rv_happy_place_list.setHasFixedSize(true)
-        rv_happy_place_list.adapter = HappyPlacesAdapter(this, placeList)
+
+        val placeAdapter = HappyPlacesAdapter(this, placeList)
+        rv_happy_place_list.adapter = placeAdapter
+
+        placeAdapter.setOnClickListener(object: HappyPlacesAdapter.OnClickListener {
+            override fun onClick(position: Int, model: HappyPlaceModel) {
+                val intent = Intent(this@MainActivity, HappyPlaceDetailActivity::class.java)
+                intent.putExtra(EXTRA_PLACE_DETAILS, model)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun getHappyPlaceListFromLocalDB() {
