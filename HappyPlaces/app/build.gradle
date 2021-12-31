@@ -49,5 +49,6 @@ dependencies {
     // 3rd party lib for rounded image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // lib for debug DB inspector
     debugImplementation 'im.dino:dbinspector:4.0.0@aar'
 }

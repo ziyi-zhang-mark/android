@@ -121,6 +121,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
                         if (result > 0) {
                             Toast.makeText(this, "The place is inserted successfully", Toast.LENGTH_SHORT).show()
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                     }
@@ -137,7 +138,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     val contentURI = data.data
                     try {
                         val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                        // store the image to local
+                        // store the image to local, return a URI that refers to it
                         localStorageURI = saveImageToInternalStorage(selectedImageBitmap)
                         Log.i("ziyiz saved image uri: ", "Path - $localStorageURI")
 
@@ -152,7 +153,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     val thumbnail: Bitmap = data.extras?.get("data") as Bitmap
 
                     // store the image to local
-                    localStorageURI = saveImageToInternalStorage(thumbnail )
+                    localStorageURI = saveImageToInternalStorage(thumbnail)
                     Log.i("ziyiz saved image uri: ", "Path - $localStorageURI")
 
                     iv_place_image.setImageBitmap(thumbnail)
