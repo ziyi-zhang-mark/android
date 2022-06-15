@@ -31,10 +31,7 @@ class MainActivity : AppCompatActivity() {
      * Inner classes carry a reference to an object of an outer class:”
      * source: https://kotlinlang.org/docs/reference/nested-classes.html
      *
-     * This is the background class is used to execute background task.
-     *
-     * For Background we have used the AsyncTask
-     *
+     * This is the background class AsyncTask used to execute background task.
      * Asynctask : Creates a new asynchronous task. This constructor must be invoked on the UI thread.
      */
     @SuppressLint("StaticFieldLeak")
@@ -44,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         private lateinit var customProgressDialog: Dialog
 
         /**
-         * This function is for the task which we wants to perform before background execution.
-         * Here we have shown the progress dialog to user that UI is not freeze but executing something in background.
+         * This function is for tasks to be performed before background execution.
+         * Here we have shown the progress dialog to user, UI not frozen but task executed in background.
          */
         override fun onPreExecute() {
             super.onPreExecute()
@@ -149,7 +146,6 @@ class MainActivity : AppCompatActivity() {
 
             for (item in responseData.data_list.indices) {
                 Log.i("Value $item", "${responseData.data_list[item]}")
-
                 Log.i("ID", "${responseData.data_list[item].id}")
                 Log.i("Value", "${responseData.data_list[item].value}")
             }

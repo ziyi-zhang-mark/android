@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         val placeAdapter = HappyPlacesAdapter(this, placeList)
         rv_happy_place_list.adapter = placeAdapter
 
+        // go to detail view
         placeAdapter.setOnClickListener(object: HappyPlacesAdapter.OnClickListener {
             override fun onClick(position: Int, model: HappyPlaceModel) {
                 val intent = Intent(this@MainActivity, HappyPlaceDetailActivity::class.java)

@@ -62,7 +62,7 @@ class HappyPlacesAdapter(
         val isDeleted = dbHandler.deleteHappyPlace(list[position])
         if (isDeleted > 0) {
             list.removeAt(position)
-//            notifyItemRemoved(position)
+//            notifyItemRemoved(position) // notify the adapter
         }
     }
 

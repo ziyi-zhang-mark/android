@@ -60,7 +60,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         contentValues.put(KEY_LATITUDE, happyPlace.latitude)
         contentValues.put(KEY_LONGITUDE, happyPlace.longitude)
 
-        // Inserting Row
+        // insert a row
         val result = db.insert(TABLE_HAPPY_PLACE, null, contentValues)
 
         db.close()
@@ -80,8 +80,11 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         contentValues.put(KEY_LONGITUDE, happyPlace.longitude)
 
         // update a row
-        val result = db.update(TABLE_HAPPY_PLACE, contentValues, KEY_ID + "=" + happyPlace.id, null)
-
+        val result = db.update(
+            TABLE_HAPPY_PLACE,
+            contentValues,
+            KEY_ID + "=" + happyPlace.id,
+            null)
         db.close()
         return result
     }
