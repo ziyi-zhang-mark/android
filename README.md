@@ -981,8 +981,6 @@ android:theme="@style/NoActionBarTheme"
 android:windowSoftInputMode="adjustResize"
 ```
 
-sp: scalable pixel
-
 ## Room Database
 
 ### 3 components of Room Database
