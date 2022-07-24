@@ -21,6 +21,10 @@ sp
 
 ![](media/activity-state.png)
 
+### Fragment Lifecycle
+
+![](media/fragment-state.png)
+
 - onCreate(Bundle?)
   - inflate views and put them onscreen(in the call to `setContentView()`)
   - get references to inflated views(`view binding` or `findViewById()`)
