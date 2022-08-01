@@ -64,3 +64,32 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 }
 // blurring code will only be called when the app is running on a device with API level 31 or higher. You have made your code safe for API level 24(minSdk)
 ```
+
+### Coroutine
+
+```kotlin
+init {
+    Log.d(TAG, "init starting")
+    viewModelScope.launch {
+        Log.d(TAG, "coroutine launched")
+        delay(5000)
+        for(i in 0 until 100) {
+            val crime = Crime(
+                id = UUID.randomUUID(),
+                title = "Crime #$i",
+                date = Date(),
+                isSolved = i % 2 == 0
+            )
+            crimes.add(crime)
+        }
+        Log.d(TAG, "Loading crimes finished")
+    }
+    Log.d(TAG, "init ending")
+}
+// init starting
+// coroutine launched
+// init ending
+// Loading crimes finished
+```
+
+![](media/coroutine.png)
