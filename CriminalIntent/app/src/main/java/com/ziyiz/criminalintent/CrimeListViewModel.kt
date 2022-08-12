@@ -30,4 +30,8 @@ class CrimeListViewModel: ViewModel() {
         }
         Log.d(TAG, "init ending")
     }
+
+    suspend fun addCrime(crime: Crime) {
+        crimeRepository.addCrime(crime)
+    }
 }
