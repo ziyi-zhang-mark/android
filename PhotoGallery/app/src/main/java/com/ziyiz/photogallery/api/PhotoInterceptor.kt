@@ -5,8 +5,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-// TODO: remove before commit
-private const val API_KEY = "558f5e49707e990ca2b3e2ae1c8164a7"
+private const val API_KEY = ""
 
 class PhotoInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
