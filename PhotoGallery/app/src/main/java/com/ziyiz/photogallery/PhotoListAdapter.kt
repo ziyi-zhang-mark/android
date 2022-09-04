@@ -1,5 +1,6 @@
 package com.ziyiz.photogallery
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ class PhotoViewHolder(
     private val binding: ListItemGalleryBinding
 ): RecyclerView.ViewHolder(binding.root) {
     fun bind(galleryItem: GalleryItem) {
+        Log.d("PhotoListAdapter", "galleryItem.url: ${galleryItem.url}")
         binding.itemImageView.load(galleryItem.url) {
             placeholder(R.drawable.bill_up_close)
         }
