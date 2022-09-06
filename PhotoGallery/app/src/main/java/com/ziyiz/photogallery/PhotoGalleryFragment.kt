@@ -10,15 +10,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.ziyiz.photogallery.databinding.FragmentPhotoGalleryBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "PhotoGalleryFragment"
+private const val POLL_WORK = "POLL_WORK"
 
 class PhotoGalleryFragment: Fragment() {
     private var _binding: FragmentPhotoGalleryBinding? = null
@@ -34,16 +33,6 @@ class PhotoGalleryFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .build()
-        val workRequest = OneTimeWorkRequest
-            .Builder(PollWorker::class.java)
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(requireContext())
-            .enqueue(workRequest)
     }
 
     override fun onCreateView(
@@ -124,5 +113,22 @@ class PhotoGalleryFragment: Fragment() {
             R.string.start_polling
         }
         pollingMenuItem?.setTitle(toggleItemTitle)
+
+        if (isPolling) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .build()
+            val periodicRequest =
+                PeriodicWorkRequestBuilder<PollWorker>(15, TimeUnit.MINUTES)
+                    .setConstraints(constraints)
+                    .build()
+            WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+                POLL_WORK,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicRequest
+            )
+        } else {
+            WorkManager.getInstance(requireContext()).cancelUniqueWork(POLL_WORK)
+        }
     }
 }
