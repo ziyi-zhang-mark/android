@@ -23,8 +23,6 @@ class PhotoGalleryViewModel: ViewModel() {
             preferencesRepository.storedQuery.collectLatest { storedQuery ->
                 try {
                     val items = fetchGalleryItems(storedQuery)
-                    Log.d(TAG, "Items received: $items")
-                    // _galleryItems.value = items
                     _uiState.update { oldState ->
                         oldState.copy(
                             images = items,
@@ -36,11 +34,23 @@ class PhotoGalleryViewModel: ViewModel() {
                 }
             }
         }
+
+        viewModelScope.launch {
+            preferencesRepository.isPolling.collect { isPolling ->
+                _uiState.update { it.copy(isPolling = isPolling) }
+            }
+        }
     }
 
     fun setQuery(query: String) {
         viewModelScope.launch {
             preferencesRepository.setStoredQuery(query)
+        }
+    }
+
+    fun toggleIsPolling() {
+        viewModelScope.launch {
+            preferencesRepository.setPolling(!uiState.value.isPolling)
         }
     }
 
@@ -56,4 +66,5 @@ class PhotoGalleryViewModel: ViewModel() {
 data class PhotoGalleryUiState(
     val images: List<GalleryItem> = listOf(),
     val query: String = "",
+    val isPolling: Boolean = false,
 )
