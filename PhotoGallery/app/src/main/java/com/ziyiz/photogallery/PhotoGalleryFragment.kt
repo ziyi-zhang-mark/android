@@ -1,5 +1,6 @@
 package com.ziyiz.photogallery
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -51,7 +52,10 @@ class PhotoGalleryFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoGalleryViewModel.uiState.collect { state ->
-                    binding.photoGrid.adapter = PhotoListAdapter(state.images)
+                    binding.photoGrid.adapter = PhotoListAdapter(state.images) {
+                        val intent = Intent(Intent.ACTION_VIEW, it)
+                        startActivity(intent)
+                    }
                     searchView?.setQuery(state.query, false)
                     updatePollingState(state.isPolling)
                 }
