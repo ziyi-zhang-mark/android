@@ -1,6 +1,4 @@
-## OOP
-
-### enum class
+## enum class
 
 ```kotlin
 enum class Color {
@@ -36,7 +34,7 @@ fun mix(c1: Color, c2: Color) = when (setOf(c1, c2)) {
 println(mix(BLUE, YELLOW)) // GREEN
 ```
 
-### Class
+## Class
 
 ```kotlin
 // primary constructor
@@ -140,7 +138,7 @@ class Car() {
 }
 ```
 
-### Getter/Setter
+## Getter/Setter
 
 ```kotlin
 class User(val name: String) {
@@ -157,7 +155,7 @@ user.address = "Elsenheimerstrasse 47, 80687 Muenchen"
 // "unspecified" -> "Elsenheimerstrasse 47, 80687 Muenchen".
 ```
 
-### Data Class
+## Data Class
 
 In `data class`, necessary methods are automatically generated for you. e.g. toString(), equals(), and hashCode(). Properties that aren't declared in the `primary constructor` don't take part in the `equality` checks and `hash code` calculation.
 
@@ -352,7 +350,7 @@ When you use a coroutine to perform tasks like making a network request, the cod
 
 Behind the scenes, Kotlin saves and restores the function state between suspending function calls. This allows the original function call to be temporarily freed from memory until it is ready to be resumed. Because of these optimizations, coroutines are considerably more resource efficient than native threads.
 
-Most coroutine builders also start the coroutine immediately after creating it. Several builders are defined for you in the Coroutines library. The most commonly used coroutine builder is `launch`, a function defined as an extension to a class called `CoroutineScope`. You will see more information on scopes shortly; for now, you will use the subclass `GlobalScope`.
+Most coroutine builders also start the coroutine immediately after creating it. Several builders are defined for you in the Coroutines library. The most commonly used coroutine builder is `launch`, a function defined as an extension to a class called `CoroutineScope`. You will see more information on scopes, for now, you will use the subclass `GlobalScope`.
 
 Launch a new coroutine by wrapping your call to `fetchFlight` in a call to the `launch` function defined on `GlobalScope`.
 
@@ -391,6 +389,13 @@ data class FlightStatus(
     }
 }
 
+suspend fun fetchFlight(passengerName: String): FlightStatus {
+    val client= HttpClient(CIO)
+    val flightResponse = client.get<String>(FLIGHT_ENDPOINT)
+    val loyaltyResponse = client.get<String>(LOYALTY_ENDPOINT)
+    return FlightStatus.parse(flightResponse, loyaltyResponse, passengerName)
+}
+
 fun main() {
     runBlocking {
         println("Started")
@@ -400,13 +405,6 @@ fun main() {
         }
         println("Finished")
     }
-}
-
-suspend fun fetchFlight(passengerName: String): FlightStatus {
-    val client= HttpClient(CIO)
-    val flightResponse = client.get<String>(FLIGHT_ENDPOINT)
-    val loyaltyResponse = client.get<String>(LOYALTY_ENDPOINT)
-    return FlightStatus.parse(flightResponse, loyaltyResponse, passengerName)
 }
 ```
 
@@ -417,26 +415,6 @@ A `Deferred` value represents a value that might not be ready at this moment, bu
 To access the deferred value, you call `await` on the `Deferred`. This `await` is also a suspend function: When you call it, it will immediately return the result if the work has finished, otherwise it will suspend until the value is ready.
 
 ```kotlin
-/*
-Started
-Finished
-Started fetching flight info
-Started fetching loyalty info
-Combining flight data
-Finished fetching loyalty info
-Finished fetching flight info
-FlightStatus(flightNumber=JW3178, passengerName=Mark, passengerLoyaltyTier=Silver, originAirport=CYM, destinationAirport=XXF, status=Canceled, departureTimeInMinutes=35)
-*/
-fun main() {
-    runBlocking {
-        println("Started")
-        launch {
-            val flight = fetchFlight("Mark")
-            println(flight)
-        }
-        println("Finished")
-    }
-}
 
 suspend fun fetchFlight(passengerName: String): FlightStatus = coroutineScope {
     val client= HttpClient(CIO)
@@ -460,4 +438,22 @@ suspend fun fetchFlight(passengerName: String): FlightStatus = coroutineScope {
     FlightStatus.parse(flightResponse.await(), loyaltyResponse.await(), passengerName)
 }
 
+fun main() {
+    runBlocking {
+        println("Started")
+        launch {
+            val flight = fetchFlight("Mark")
+            println(flight)
+        }
+        println("Finished")
+    }
+}
+// Started
+// Finished
+// Started fetching flight info
+// Started fetching loyalty info
+// Combining flight data
+// Finished fetching loyalty info
+// Finished fetching flight info
+// FlightStatus(flightNumber=JW3178, passengerName=Mark, passengerLoyaltyTier=Silver, originAirport=CYM, destinationAirport=XXF, status=Canceled, departureTimeInMinutes=35)
 ```

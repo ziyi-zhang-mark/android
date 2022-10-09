@@ -1,8 +1,8 @@
 # Kotlin
 
-var - mutable. Even though the `var` keyword allows a variable to change its value, its **type** is fixed.
+- `var` - mutable. Even though the `var` keyword allows a variable to change its value, its **type** is fixed.
 
-val - immutable. But the object that it points to can be **mutable**.
+- `val` - immutable. But the object that it points to can be **mutable**.
 
 ```kotlin
 val languages = arrayListOf("Java")
@@ -13,16 +13,16 @@ languages.add("Kotlin")
 
 String/Char/Boolean/Int/Double/List/Set/Map
 
-`==` Evaluates whether the `value` on the left is equal to the `value` on the right.
+- `==` Evaluates whether the `value` on the left is equal to the `value` on the right.
 
-`===` Evaluates whether the two `instances` point to the `same reference`.
+- `===` Evaluates whether the two `instances` point to the `same reference`.
 
 ```kotlin
 const val HERO_NAME = "Madrigal"  // compile-time constant
 fun main() {
-    val name = "Denis" // val - IMMUTABLE
+    val name = "Denis"
     name = "Michael" // ERROR: val cannot be reassigned
-    println("Hello, world!!! $name ${name.length}")
+    println("$name ${name.length}")
 
     /*
      var is used for variables which are mutable. Kotlin is a strongly typed language that
@@ -47,7 +47,6 @@ fun main() {
 
     // Char
     val letterChar = 'A'
-    val digitChar = '1'
 
     // String
     val myStr = "Hello World"
@@ -121,7 +120,7 @@ fun isLetter(c: Char) = c in 'a'..'z' || c in 'A'..'Z'
 fun isNotDigit(c: Char) = c !in '0'..'9'
 ```
 
-## function
+## Function
 
 ```kotlin
 // default argument
@@ -143,7 +142,7 @@ private fun quest(playerLevel: Int) = when (playerLevel) {
 }
 ```
 
-`Unit` function - functions w/o return type, Kotlin automatically used the `Unit` as return type.
+`Unit` function - functions without a `return type`, Kotlin automatically used the `Unit` as return type.
 
 ```kotlin
 fun max(a: Int, b: Int): Int {
@@ -388,23 +387,8 @@ sum(10, 5)
 
 val people = listOf(Person("Alice", 29), Person("Bob", 31))
 people.maxBy { it.age }
-people.maxBy({ p: Person -> p.age })  // lambda verbose
-
-// using function parameters in a lambda
-fun printProblemCounts(responses: Collection<String>) {
-    var clientErrors = 0
-    var serverErrors = 0
-    responses.forEach {
-        if (it.startsWith("4")) {
-            clientErrors++
-        } else if (it.startsWith("5")) {
-            serverErrors++
-        }
-    }
-    println("$clientErrors client errors, $serverErrors server errors")
-}
-val responses = listOf("200 OK", "418 I'm a teapot", "500 Internal Server Error")
-printProblemCounts(responses) // 1 client errors, 1 server errors
+// lambda verbose equivalent
+people.maxBy({ p: Person -> p.age })
 ```
 
 ```java
@@ -505,7 +489,7 @@ File("file.txt")
     .also { fileContents = it }
 ```
 
-### `takeif` function
+### `takeIf` function
 
 `takeIf` works differently than the other scope functions: It evaluates a predicate condition provided in a lambda that returns either `true` or `false`. If the condition evaluates as `true`, the receiver is returned from `takeIf`.
 If the condition is `false`, null is returned instead.
@@ -555,11 +539,9 @@ fun main(args: Array<String>) {
 
 ## Nested class Inner class
 
-`Nested class` - created inside another class. Is by default `static`
+`Nested class` - created inside another class and is `static` by default. It **cannot** access the data members of `outer` classes
 
-`Nested class` - **cannot** access the data members of outer classes
-
-`Inner class` - created inside another class with keyword `inner`. It is able to access members of its outer class even it is private. `Inner class` keeps a reference to an object of its outer class.
+`Inner class` - created inside another class with keyword `inner`. It is able to access members of its `outer` class even it is private. `Inner class` keeps a reference to an object of its `outer` class.
 
 ```kotlin
 // Nested class
@@ -603,6 +585,7 @@ fun main(args: Array<String>) {
 ## Cast
 
 Unsafe cast `as`
+
 Safe cast `as?`
 
 ```kotlin
@@ -614,7 +597,7 @@ val safeString: String? = location as? String  // Kotlin
 val safeInt: Int? = location as? Int  // null
 ```
 
-## try catch
+## Try Catch
 
 #### Unchecked Exception
 
@@ -651,93 +634,70 @@ println("code after validation check")
 // Exception in thread "main: under age."
 ```
 
-## dp sp
-
-```kotlin
-// LinearLayout
-android:orientation="vertical"
-android:layout_weight="1"
-android:onClick="onPress"
-(view as Button).text
-android:padding="10dp"
-android:gravity="right|bottom|center_vertical"
-
-android:screenOrientation="portrait"
-android:theme="@style/NoActionBarTheme"
-// resize when soft keyboard displays
-android:windowSoftInputMode="adjustResize"
-```
-
-## Room Database
-
-### 3 components of Room Database
-
-- Entity
-- DAO
-- Database
-
 ## object Keyword
 
-The `object` keyword defines a class and creates an instance of that class at the same time.
+The `object` keyword defines a `class` and creates an instance of that class at the same time.
 
-1. object declaration - combine `class` declaration and a declaration of `a single instance` of that class
+- object declaration
 
-```kotlin
-object Payroll {
-    val allEmployees = arrayListOf<Person>()
-    fun calculateSalary() {
-        for (person in allEmployees) {
-            ...
+  - combine `class` declaration and a declaration of `a single instance` of that class
+
+    ```kotlin
+    object Payroll {
+        val allEmployees = arrayListOf<Person>()
+        fun calculateSalary() {
+            for (person in allEmployees) {
+                ...
+            }
         }
     }
-}
-Payroll.allEmployees.add(Person(...))
-Payroll.calculateSalary()
-```
+    Payroll.allEmployees.add(Person(...))
+    Payroll.calculateSalary()
+    ```
 
-`object declaration` can also inherit from `classes` and `interfaces`
+  - `object declaration` can also inherit from `classes` and `interfaces`
 
-```kotlin
-// inherit from interface
-object CaseInsensitiveFileComparator: Comparator<File> {
-    override fun compare(file1: File, file2: File): Int {
-        return file1.path.compareTo(file2.path, ignoreCase = True)
+    ```kotlin
+    // inherit from interface
+    object CaseInsensitiveFileComparator: Comparator<File> {
+        override fun compare(file1: File, file2: File): Int {
+            return file1.path.compareTo(file2.path, ignoreCase = True)
+        }
     }
-}
-println(CaseInsensitiveFileComparator.compare(File("/User"), File("/user"))) // 0
+    println(CaseInsensitiveFileComparator.compare(File("/User"), File("/user"))) // 0
 
-val files = listOf(File("/Z"), File("/a"))
-println(files.sortedWith(CaseInsensitiveFileComparator)) // [/a, /Z]
-```
+    val files = listOf(File("/Z"), File("/a"))
+    println(files.sortedWith(CaseInsensitiveFileComparator)) // [/a, /Z]
+    ```
 
-Nested object
+  - Nested object
 
-```kotlin
-data class Person(val name: String) {
-    object NameComparator : Comparator<Person> {
-        override fun compare(p1: Person, p2: Person): Int = p1.name.compareTo(p2.name)
+    ```kotlin
+    data class Person(val name: String) {
+        object NameComparator : Comparator<Person> {
+            override fun compare(p1: Person, p2: Person): Int = p1.name.compareTo(p2.name)
+        }
     }
-}
-val persons = listOf(Person("Bob"), Person("Alice"))
-println(persons.sortedWith(Person.NameComparator)) // [Person(name=Alice), Person(name=Bob)]
-```
+    val persons = listOf(Person("Bob"), Person("Alice"))
+    println(persons.sortedWith(Person.NameComparator)) // [Person(name=Alice), Person(name=Bob)]
+    ```
 
-2. Companion object - `static` property/function in Kotlin
+- Companion object - `static` property/function in Kotlin
 
-```kotlin
-class A {
-    companion object {
-        fun bar() {...}
-    }
-}
-A.bar()
+  ```kotlin
+  class A {
+      companion object {
+          fun bar() {...}
+      }
+  }
+  A.bar()
 
-class User private constructor(val nickname: String) {  // private primary constructor
-    companion object {
-        fun newSubscribingUser(email: String) = User(email.substringBefore("@"))
-        fun newFacebookUser(accountId: Int) = User(getFacebookName(accountId))
-    }
-}
-val subscribingUser = User.newSubscribingUser("bob@gmail.com")
-val facebookUser = User.newFacebookUser(4)
-```
+  class User private constructor(val nickname: String) {  // private primary constructor
+      companion object {
+          fun newSubscribingUser(email: String) = User(email.substringBefore("@"))
+          fun newFacebookUser(accountId: Int) = User(getFacebookName(accountId))
+      }
+  }
+  val subscribingUser = User.newSubscribingUser("bob@gmail.com")
+  val facebookUser = User.newFacebookUser(4)
+  ```

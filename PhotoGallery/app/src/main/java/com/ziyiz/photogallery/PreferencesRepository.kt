@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.map
 class PreferencesRepository private constructor(
     private val dataStore: DataStore<Preferences>
 ) {
+    // read
     val storedQuery: Flow<String> = dataStore.data.map {
         it[SEARCH_QUERY_KEY] ?: ""
     }.distinctUntilChanged()
 
+    // write
     suspend fun setStoredQuery(query: String) {
         dataStore.edit {
             it[SEARCH_QUERY_KEY] = query
